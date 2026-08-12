@@ -1,189 +1,75 @@
-# Clothing Brand E-commerce Website
+# Clothing E-commerce — Boutique en ligne (Laravel)
 
-A professional, responsive e-commerce website for a clothing brand built with Laravel 12, MySQL, and TailwindCSS. Features a clean, luxury design inspired by Ralph Lauren's aesthetic with modern functionality.
+> Plateforme e-commerce pour une marque de vêtements : catalogue produits filtrable, panier (invité et connecté), tunnel de commande complet et suivi des commandes.
 
-## Features
+![PHP](https://img.shields.io/badge/PHP-8.2%2B-777BB4?style=flat&logo=php&logoColor=white)
+![Laravel](https://img.shields.io/badge/Laravel-12-FF2D20?style=flat&logo=laravel&logoColor=white)
+![TailwindCSS](https://img.shields.io/badge/TailwindCSS-4-06B6D4?style=flat&logo=tailwindcss&logoColor=white)
+![Status](https://img.shields.io/badge/Status-Portfolio%20Project-blue)
+![License](https://img.shields.io/badge/License-MIT-green)
 
-### Frontend
-- **Homepage**: Hero banner, product categories, featured products, brand story, newsletter signup
-- **Product Catalog**: Advanced filtering and sorting by category, price, size, color
-- **Product Details**: Zoomable images, size/color selection, add to cart functionality
-- **Shopping Cart**: Session-based cart for guests, persistent cart for users
-- **Checkout**: Guest checkout or user login, shipping/billing forms, order confirmation
-- **User Accounts**: Registration, login, profile management, order history
-- **Responsive Design**: Mobile-first design optimized for all devices
+## Aperçu du projet
 
-### Backend
-- **Admin Dashboard**: Manage products, categories, orders, users, newsletter subscribers
-- **Order Management**: Track order status, update shipping information
-- **Inventory Management**: Stock tracking, product variants (size/color)
-- **User Management**: Customer accounts, admin roles
-- **Newsletter System**: Subscriber management and email collection
+Clothing E-commerce est une application Laravel implémentant le cœur fonctionnel d'une boutique en ligne de vêtements : navigation produits avec filtres avancés, gestion de panier, tunnel de commande (checkout) avec facturation/livraison, et suivi des commandes côté client. Le projet illustre une architecture MVC Laravel classique avec relations Eloquent, scopes de requête réutilisables et validation robuste des entrées.
 
-### Technical Features
-- **Laravel 12**: Latest Laravel framework with modern PHP features
-- **MySQL Database**: Robust relational database with optimized queries
-- **TailwindCSS**: Utility-first CSS framework for rapid UI development
-- **Laravel Breeze**: Authentication scaffolding
-- **Image Management**: Product image upload and optimization
-- **SEO Optimized**: Meta tags, clean URLs, semantic HTML
-- **Security**: CSRF protection, input validation, secure authentication
+Il s'adresse aux recruteurs souhaitant évaluer une implémentation Laravel structurée autour d'un domaine métier e-commerce réaliste (catalogue, panier, commande) plutôt qu'un CRUD basique.
 
-## Installation
+## Fonctionnalités clés
 
-### Prerequisites
-- PHP 8.2 or higher
+- **Catalogue produits** — listing paginé avec filtres (catégorie, prix min/max, taille, couleur), recherche texte et tri (prix, nouveauté, mis en avant).
+- **Fiches produits** — détail produit avec images multiples, produits similaires suggérés par catégorie.
+- **Catégories** — hiérarchie catégorie/sous-catégorie avec navigation dédiée.
+- **Panier** — fonctionne pour les visiteurs non connectés (basé sur la session) et les utilisateurs authentifiés, avec ajout/mise à jour/suppression via API JSON.
+- **Tunnel de commande (checkout)** — formulaire de facturation et livraison, calcul automatique (sous-total, taxe, frais de port), création de commande transactionnelle (rollback en cas d'erreur) avec décrément du stock.
+- **Historique de commandes** — consultation des commandes passées et de leur détail depuis le profil utilisateur.
+- **Gestion de profil** — mise à jour des informations personnelles, suppression de compte avec confirmation par mot de passe.
+- **Newsletter** — inscription à la newsletter avec validation d'email unique.
+
+## Architecture & Stack technique
+
+| Élément | Technologie |
+|---|---|
+| **Backend** | Laravel 12 (PHP 8.2+) |
+| **Base de données** | SQLite en développement (configuré dans `.env.example`) |
+| **Frontend** | Blade templates + TailwindCSS 4, build via Vite |
+| **Authentification** | Laravel Breeze (dépendance installée, scaffolding non finalisé — voir section "Point d'attention") |
+| **Traitement d'images** | Intervention Image |
+| **Architecture** | MVC — Contrôleurs, Modèles Eloquent (avec scopes de requête), vues Blade |
+
+**Modèles principaux :** `Product`, `Category`, `ProductImage`, `CartItem`, `Order`, `OrderItem`, `NewsletterSubscriber`, `User` (étendu avec `is_admin`, téléphone, date de naissance, etc.)
+
+## Installation & Démarrage rapide
+
+### Prérequis
+- PHP 8.2+
 - Composer
-- Node.js and NPM
-- MySQL 5.7 or higher
+- Node.js + npm
 
-### Setup Instructions
+### Étapes
 
-1. **Install Dependencies**
-   ```bash
-   composer install
-   npm install
-   ```
-
-2. **Environment Configuration**
-   ```bash
-   cp .env.example .env
-   ```
-   
-   Update your `.env` file with MySQL database configuration:
-   ```env
-   DB_CONNECTION=mysql
-   DB_HOST=127.0.0.1
-   DB_PORT=3306
-   DB_DATABASE=brandd
-   DB_USERNAME=root
-   DB_PASSWORD=your_mysql_password
-   ```
-
-3. **Generate Application Key**
-   ```bash
-   php artisan key:generate
-   ```
-
-4. **Run Migrations and Seeders**
-   ```bash
-   php artisan migrate --seed
-   ```
-
-5. **Install Laravel Breeze**
-   ```bash
-   composer require laravel/breeze --dev
-   php artisan breeze:install blade
-   ```
-
-6. **Compile Assets**
-   ```bash
-   npm run build
-   ```
-
-7. **Create Storage Link**
-   ```bash
-   php artisan storage:link
-   ```
-
-8. **Start Development Server**
-   ```bash
-   php artisan serve
-   ```
-
-## Database Structure
-
-### Core Tables
-- `users` - Customer and admin accounts
-- `categories` - Product categories with hierarchical structure
-- `products` - Product catalog with variants and inventory
-- `product_images` - Product image management
-- `product_categories` - Many-to-many relationship
-- `orders` - Order management and tracking
-- `order_items` - Individual order line items
-- `cart_items` - Shopping cart persistence
-- `newsletter_subscribers` - Email marketing list
-
-## Default Users
-
-After running the seeders, you can log in with these test accounts:
-
-**Admin Account:**
-- Email: admin@example.com
-- Password: password
-
-**Customer Accounts:**
-- Email: john@example.com / Password: password
-- Email: jane@example.com / Password: password
-
-## Key Routes
-
-### Public Routes
-- `/` - Homepage
-- `/products` - Product catalog
-- `/products/{product}` - Product details
-- `/category/{category}` - Category pages
-- `/cart` - Shopping cart
-
-### Authentication Required
-- `/checkout` - Checkout process
-- `/profile` - User profile
-- `/orders` - Order history
-
-## Customization
-
-### Brand Configuration
-Update `config/app.php` to change the application name:
-```php
-'name' => env('APP_NAME', 'Your Brand Name'),
-```
-
-### Styling
-The design uses TailwindCSS with custom components in `resources/css/app.css`. Key design elements:
-- Clean, minimalist aesthetic
-- Luxury color palette (grays, whites, blacks)
-- Elegant typography (Inter + Playfair Display)
-- Smooth animations and transitions
-
-### Product Management
-Products support:
-- Multiple categories
-- Size and color variants
-- Stock management
-- Sale pricing
-- Featured products
-- SEO meta tags
-
-## Development
-
-### Running in Development
 ```bash
-# Start Laravel development server
-php artisan serve
+git clone https://github.com/ELGHAD/Clothing-ecommerce.git
+cd Clothing-ecommerce
 
-# Watch for asset changes
+# Dépendances PHP
+composer install
+
+# Dépendances front-end
+npm install
+
+# Configuration de l'environnement
+cp .env.example .env
+php artisan key:generate
+
+# Base de données (SQLite par défaut)
+touch database/database.sqlite
+php artisan migrate --seed
+
+# Compiler les assets et lancer le serveur
 npm run dev
-
-# Run queue workers (for background jobs)
-php artisan queue:work
+php artisan serve
 ```
 
-### Testing
-```bash
-php artisan test
-```
+L'application est accessible sur `http://localhost:8000`.
 
-## Production Deployment
-
-1. Set `APP_ENV=production` in `.env`
-2. Set `APP_DEBUG=false`
-3. Configure proper database credentials
-4. Run `composer install --optimize-autoloader --no-dev`
-5. Run `npm run build`
-6. Configure web server (Apache/Nginx)
-7. Set up SSL certificate
-8. Configure email settings for order confirmations
-
-## License
-
-This project is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
+## Structure du projet
