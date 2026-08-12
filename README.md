@@ -73,3 +73,46 @@ php artisan serve
 L'application est accessible sur `http://localhost:8000`.
 
 ## Structure du projet
+        Clothing-ecommerce/
+        ├── app/
+        │ ├── Http/Controllers/ # HomeController, ProductController, CartController, CheckoutController, ProfileController
+        │ ├── Http/Requests/ # ProfileUpdateRequest
+        │ └── Models/ # Product, Category, Order, OrderItem, CartItem, ProductImage, NewsletterSubscriber, User
+        ├── database/
+        │ ├── migrations/ # Schéma : produits, catégories, commandes, panier, newsletter
+        │ └── seeders/ # DatabaseSeeder, ProductSeeder, CategorySeeder, UserSeeder
+        ├── resources/
+        │ ├── views/ # home, products, cart, checkout, profile (Blade)
+        │ ├── css/ / js/ # Assets Tailwind / Vite
+        ├── routes/
+        │ └── web.php # Déclaration des routes
+        └── composer.json / package.json
+
+
+## Sécurité & bonnes pratiques
+
+- **Protection CSRF** native sur tous les formulaires Blade.
+- **Validation des entrées** via `$request->validate()` et Form Requests dédiées (`ProfileUpdateRequest`).
+- **Mass assignment protégé** — chaque modèle Eloquent déclare explicitement ses champs `$fillable`.
+- **Transactions de base de données** — la création de commande (`CheckoutController::store`) est encapsulée dans une transaction avec rollback automatique en cas d'échec.
+- **Contrôle d'accès** — vérification de propriété avant affichage d'une commande ou modification d'un item de panier (`abort(403)` si l'utilisateur n'est pas propriétaire).
+- **Suppression de compte sécurisée** — confirmation par mot de passe actuel avant suppression.
+
+## Point d'attention
+
+Le dépôt contient un README existant qui annonce des fonctionnalités non encore présentes dans le code actuel :
+
+- **Dashboard admin** — mentionné dans la description du projet, mais aucun `AdminController`, route ou vue d'administration n'existe dans le code. Seul un champ `is_admin` est présent en base, non exploité.
+- **Authentification (login/inscription)** — Laravel Breeze est déclaré comme dépendance dans `composer.json`, mais son scaffolding n'a pas été exécuté : le fichier `routes/auth.php` est commenté (`// Will be uncommented after Breeze installation`) et aucune vue `resources/views/auth/` n'existe. Le checkout et le profil sont protégés par le middleware `auth`, mais aucun moyen de se connecter n'est actuellement fonctionnel.
+- **Base de données** — le README existant mentionne MySQL, alors que `.env.example` configure SQLite par défaut.
+
+À corriger avant de présenter ce projet en entretien : soit finaliser l'installation de Breeze (`php artisan breeze:install`) et activer les routes d'auth, soit ajuster la description du projet pour refléter l'état actuel du code.
+
+## Auteur & Contact
+
+**Hamza Elrhadiouini**
+Étudiant Ingénieur en Génie Logiciel (MIAGE) — EMSI Rabat
+
+- GitHub : [@ELGHAD](https://github.com/ELGHAD)
+- Portfolio : [elghad.github.io/hamza-elrhadiouini-portfolio](https://elghad.github.io/hamza-elrhadiouini-portfolio)
+- Email : [hamelrhadiouini@gmail.com](mailto:hamelrhadiouini@gmail.com)
