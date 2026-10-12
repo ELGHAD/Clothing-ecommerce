@@ -1,118 +1,242 @@
-# Clothing E-commerce — Boutique en ligne (Laravel)
+# Clothing E-commerce — Laravel
 
-> Plateforme e-commerce pour une marque de vêtements : catalogue produits filtrable, panier (invité et connecté), tunnel de commande complet et suivi des commandes.
+A Laravel-based clothing store application featuring product discovery, filtering, shopping cart management, checkout workflows, inventory updates, and order history.
 
 ![PHP](https://img.shields.io/badge/PHP-8.2%2B-777BB4?style=flat&logo=php&logoColor=white)
 ![Laravel](https://img.shields.io/badge/Laravel-12-FF2D20?style=flat&logo=laravel&logoColor=white)
-![TailwindCSS](https://img.shields.io/badge/TailwindCSS-4-06B6D4?style=flat&logo=tailwindcss&logoColor=white)
-![Status](https://img.shields.io/badge/Status-Portfolio%20Project-blue)
-![License](https://img.shields.io/badge/License-MIT-green)
+![Tailwind CSS](https://img.shields.io/badge/Tailwind_CSS-4-06B6D4?style=flat&logo=tailwindcss&logoColor=white)
+![SQLite](https://img.shields.io/badge/Database-SQLite-003B57?style=flat&logo=sqlite&logoColor=white)
+![Architecture](https://img.shields.io/badge/Architecture-MVC-blue?style=flat)
+![License](https://img.shields.io/badge/License-MIT-green?style=flat)
 
-## Aperçu du projet
+## Overview
 
-Clothing E-commerce est une application Laravel implémentant le cœur fonctionnel d'une boutique en ligne de vêtements : navigation produits avec filtres avancés, gestion de panier, tunnel de commande (checkout) avec facturation/livraison, et suivi des commandes côté client. Le projet illustre une architecture MVC Laravel classique avec relations Eloquent, scopes de requête réutilisables et validation robuste des entrées.
+Clothing E-commerce is a web application built with Laravel that models the core workflows of an online clothing store. It combines a product catalog, category navigation, shopping cart operations, checkout, and customer order management in a traditional MVC architecture.
 
-Il s'adresse aux recruteurs souhaitant évaluer une implémentation Laravel structurée autour d'un domaine métier e-commerce réaliste (catalogue, panier, commande) plutôt qu'un CRUD basique.
+The project emphasizes practical backend development through Eloquent relationships, request validation, access checks, database transactions, and inventory updates.
 
-## Fonctionnalités clés
+**Implementation note:** The authentication flow is not yet fully configured, and an admin dashboard is not implemented. Features that depend on authenticated sessions require those gaps to be resolved before the complete user journey can be tested.
 
-- **Catalogue produits** — listing paginé avec filtres (catégorie, prix min/max, taille, couleur), recherche texte et tri (prix, nouveauté, mis en avant).
-- **Fiches produits** — détail produit avec images multiples, produits similaires suggérés par catégorie.
-- **Catégories** — hiérarchie catégorie/sous-catégorie avec navigation dédiée.
-- **Panier** — fonctionne pour les visiteurs non connectés (basé sur la session) et les utilisateurs authentifiés, avec ajout/mise à jour/suppression via API JSON.
-- **Tunnel de commande (checkout)** — formulaire de facturation et livraison, calcul automatique (sous-total, taxe, frais de port), création de commande transactionnelle (rollback en cas d'erreur) avec décrément du stock.
-- **Historique de commandes** — consultation des commandes passées et de leur détail depuis le profil utilisateur.
-- **Gestion de profil** — mise à jour des informations personnelles, suppression de compte avec confirmation par mot de passe.
-- **Newsletter** — inscription à la newsletter avec validation d'email unique.
+## Features
 
-## Architecture & Stack technique
+### Product Catalog
 
-| Élément | Technologie |
+- Paginated product listings.
+- Filtering by category, price range, size, and color.
+- Text-based product search.
+- Sorting by price, newest arrivals, and featured products.
+- Product detail pages with multiple images.
+- Related product suggestions based on category.
+- Category and subcategory navigation.
+
+### Shopping Cart
+
+- Session-based cart support for guest visitors.
+- Cart operations for authenticated users.
+- Add, update, and remove cart items through application endpoints.
+- JSON responses for cart operations where implemented.
+
+### Checkout and Orders
+
+- Billing and shipping information forms.
+- Calculation of subtotals, taxes, and shipping costs.
+- Order creation inside a database transaction.
+- Inventory updates during checkout.
+- Customer order history and order detail pages.
+
+### Customer Profile
+
+- Update personal information.
+- Delete an account after confirming the current password.
+- Newsletter subscription with email validation and uniqueness checks.
+
+The availability of authenticated features depends on completing and testing the authentication configuration.
+
+## Technology Stack
+
+| Technology | Purpose |
 |---|---|
-| **Backend** | Laravel 12 (PHP 8.2+) |
-| **Base de données** | SQLite en développement (configuré dans `.env.example`) |
-| **Frontend** | Blade templates + TailwindCSS 4, build via Vite |
-| **Authentification** | Laravel Breeze (dépendance installée, scaffolding non finalisé — voir section "Point d'attention") |
-| **Traitement d'images** | Intervention Image |
-| **Architecture** | MVC — Contrôleurs, Modèles Eloquent (avec scopes de requête), vues Blade |
+| PHP 8.2+ | Backend language |
+| Laravel 12 | Application framework |
+| Eloquent ORM | Models, relationships, and database queries |
+| SQLite | Default development database configuration |
+| Blade | Server-rendered templates |
+| Tailwind CSS 4 | User interface styling |
+| Vite | Frontend asset development and build |
+| Intervention Image | Image processing dependency |
+| Composer | PHP dependency management |
+| npm | Frontend dependency management |
 
-**Modèles principaux :** `Product`, `Category`, `ProductImage`, `CartItem`, `Order`, `OrderItem`, `NewsletterSubscriber`, `User` (étendu avec `is_admin`, téléphone, date de naissance, etc.)
+## Architecture
 
-## Installation & Démarrage rapide
+The application follows Laravel's MVC structure.
 
-### Prérequis
-- PHP 8.2+
+```text
+Browser
+   |
+   v
+Laravel Routes
+   |
+   v
+Controllers
+   |
+   +--------------------+
+   |                    |
+   v                    v
+Form Requests       Eloquent Models
+   |                    |
+   v                    v
+Validation          Database
+   |
+   v
+Blade Views / JSON Responses
+```
+
+The main domain models include:
+
+- `Product` — product information and catalog attributes.
+- `Category` — product categories and navigation.
+- `ProductImage` — product image records.
+- `CartItem` — shopping cart entries.
+- `Order` — customer orders and checkout information.
+- `OrderItem` — items associated with an order.
+- `NewsletterSubscriber` — newsletter subscription records.
+- `User` — customer account information.
+
+## Project Structure
+
+```text
+Clothing-ecommerce/
+├── app/
+│   ├── Http/
+│   │   ├── Controllers/
+│   │   └── Requests/
+│   └── Models/
+├── database/
+│   ├── migrations/
+│   └── seeders/
+├── resources/
+│   ├── views/
+│   ├── css/
+│   └── js/
+├── routes/
+│   └── web.php
+├── public/
+├── composer.json
+└── package.json
+```
+
+## Getting Started
+
+### Prerequisites
+
+- PHP 8.2 or later
 - Composer
-- Node.js + npm
+- Node.js and npm
+- PHP extensions required by Laravel and the selected database driver
 
-### Étapes
+### 1. Clone the Repository
 
 ```bash
 git clone https://github.com/ELGHAD/Clothing-ecommerce.git
 cd Clothing-ecommerce
+```
 
-# Dépendances PHP
+### 2. Install Dependencies
+
+```bash
 composer install
-
-# Dépendances front-end
 npm install
+```
 
-# Configuration de l'environnement
+### 3. Configure the Environment
+
+Create a local environment file from the supplied example:
+
+```bash
 cp .env.example .env
 php artisan key:generate
+```
 
-# Base de données (SQLite par défaut)
+The provided configuration uses SQLite by default. Create the database file if it does not already exist:
+
+```bash
 touch database/database.sqlite
-php artisan migrate --seed
+```
 
-# Compiler les assets et lancer le serveur
+Review `.env` and confirm that `DB_CONNECTION` and `DB_DATABASE` point to the intended SQLite database.
+
+### 4. Initialize the Database
+
+```bash
+php artisan migrate --seed
+```
+
+### 5. Build Frontend Assets
+
+For development:
+
+```bash
 npm run dev
+```
+
+For a production asset build:
+
+```bash
+npm run build
+```
+
+### 6. Start the Application
+
+In a separate terminal:
+
+```bash
 php artisan serve
 ```
 
-L'application est accessible sur `http://localhost:8000`.
+Open [http://localhost:8000](http://localhost:8000).
 
-## Structure du projet
-        Clothing-ecommerce/
-        ├── app/
-        │ ├── Http/Controllers/ # HomeController, ProductController, CartController, CheckoutController, ProfileController
-        │ ├── Http/Requests/ # ProfileUpdateRequest
-        │ └── Models/ # Product, Category, Order, OrderItem, CartItem, ProductImage, NewsletterSubscriber, User
-        ├── database/
-        │ ├── migrations/ # Schéma : produits, catégories, commandes, panier, newsletter
-        │ └── seeders/ # DatabaseSeeder, ProductSeeder, CategorySeeder, UserSeeder
-        ├── resources/
-        │ ├── views/ # home, products, cart, checkout, profile (Blade)
-        │ ├── css/ / js/ # Assets Tailwind / Vite
-        ├── routes/
-        │ └── web.php # Déclaration des routes
-        └── composer.json / package.json
+**Before testing:** Confirm that migrations and seeders complete successfully. Authentication-dependent pages will not provide a complete user journey until the authentication routes and views have been configured.
 
+## Security and Engineering Practices
 
-## Sécurité & bonnes pratiques
+The current implementation includes several useful backend practices:
 
-- **Protection CSRF** native sur tous les formulaires Blade.
-- **Validation des entrées** via `$request->validate()` et Form Requests dédiées (`ProfileUpdateRequest`).
-- **Mass assignment protégé** — chaque modèle Eloquent déclare explicitement ses champs `$fillable`.
-- **Transactions de base de données** — la création de commande (`CheckoutController::store`) est encapsulée dans une transaction avec rollback automatique en cas d'échec.
-- **Contrôle d'accès** — vérification de propriété avant affichage d'une commande ou modification d'un item de panier (`abort(403)` si l'utilisateur n'est pas propriétaire).
-- **Suppression de compte sécurisée** — confirmation par mot de passe actuel avant suppression.
+- **CSRF protection:** Laravel's standard protection for applicable web forms.
+- **Request validation:** Input validation through Laravel validation rules and a dedicated profile update request.
+- **Mass-assignment controls:** Explicitly configured model fillable attributes.
+- **Transactional checkout:** Database transaction handling to avoid partially completed order creation when an exception occurs.
+- **Ownership checks:** Authorization checks intended to prevent users from accessing other customers' orders or modifying their cart items.
+- **Password confirmation:** Current-password confirmation before account deletion.
 
-## Point d'attention
+These mechanisms are useful foundations, but they do not replace a complete security review or automated testing.
 
-Le dépôt contient un README existant qui annonce des fonctionnalités non encore présentes dans le code actuel :
+## Current Limitations
 
-- **Dashboard admin** — mentionné dans la description du projet, mais aucun `AdminController`, route ou vue d'administration n'existe dans le code. Seul un champ `is_admin` est présent en base, non exploité.
-- **Authentification (login/inscription)** — Laravel Breeze est déclaré comme dépendance dans `composer.json`, mais son scaffolding n'a pas été exécuté : le fichier `routes/auth.php` est commenté (`// Will be uncommented after Breeze installation`) et aucune vue `resources/views/auth/` n'existe. Le checkout et le profil sont protégés par le middleware `auth`, mais aucun moyen de se connecter n'est actuellement fonctionnel.
-- **Base de données** — le README existant mentionne MySQL, alors que `.env.example` configure SQLite par défaut.
+The repository still has several gaps to address:
 
-À corriger avant de présenter ce projet en entretien : soit finaliser l'installation de Breeze (`php artisan breeze:install`) et activer les routes d'auth, soit ajuster la description du projet pour refléter l'état actuel du code.
+- **Authentication:** Laravel Breeze is listed as a dependency, but its authentication scaffolding and routes are not fully configured.
+- **Admin dashboard:** An `is_admin` field exists, but a functional administration interface and associated access controls are not implemented.
+- **Authenticated workflows:** Checkout and profile routes rely on authentication, so the complete customer journey cannot be verified until login and registration work.
+- **Database documentation:** SQLite is the default development configuration; deployment requirements and database setup should be documented consistently.
+- **Automated testing:** Checkout calculations, inventory changes, authorization, and cart operations should be covered by tests.
+- **Production readiness:** Payment integration, operational monitoring, and deployment configuration are outside the current documented scope.
 
-## Auteur & Contact
+This repository should be treated as a portfolio project under development, rather than a production-ready online store.
+
+## Roadmap
+
+1. Complete Laravel Breeze authentication and verify registration, login, logout, and password handling.
+2. Implement admin authorization and a protected product and category management dashboard.
+3. Add automated tests for cart operations, checkout, inventory updates, and order ownership.
+4. Validate inventory availability and prevent overselling under concurrent checkout requests.
+5. Improve error handling and checkout validation.
+6. Add product image storage configuration and deployment documentation.
+7. Configure CI, production environment variables, and a reproducible deployment workflow.
+
+## Author
 
 **Hamza Elrhadiouini**
-Étudiant Ingénieur en Génie Logiciel (MIAGE) — EMSI Rabat
 
-- GitHub : [@ELGHAD](https://github.com/ELGHAD)
-- Portfolio : [elghad.github.io/hamza-elrhadiouini-portfolio](https://elghad.github.io/hamza-elrhadiouini-portfolio)
-- Email : [hamelrhadiouini@gmail.com](mailto:hamelrhadiouini@gmail.com)
+- GitHub: [@ELGHAD](https://github.com/ELGHAD)
+- Portfolio: [elghad.github.io/hamza-elrhadiouini-portfolio](https://elghad.github.io/hamza-elrhadiouini-portfolio)
